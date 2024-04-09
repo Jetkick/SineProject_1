@@ -3,24 +3,29 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/signUp.entity';
 import { Repository } from 'typeorm';
 import {
-  ISignUpServiceCreate,
-  ISignUpServiceFindOneByEmail,
-} from './interfaces/signUp-service.interface';
+  ISignUpsServiceCreate,
+  ISignUpsServiceFindOneByEmail,
+  ISignUpsServiceFindOneByUserId,
+} from './interfaces/signUps-service.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class SignUpService {
+export class SignUpsService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>, //
   ) {}
 
   // 확장성 있게 데이터를 찾아오는 방법. 이메일에 국한된 것이 아닌 다른 것들도 찾을 수 있는 방법은?
-  findOneByEmail({ email }: ISignUpServiceFindOneByEmail): Promise<User> {
+  findOneByEmail({ email }: ISignUpsServiceFindOneByEmail): Promise<User> {
     return this.usersRepository.findOne({ where: { email: email } });
   }
 
-  async createUser({ createUserInput }: ISignUpServiceCreate): Promise<User> {
+  findOneByUserId({ userId }: ISignUpsServiceFindOneByUserId): Promise<User> {
+    return this.usersRepository.findOne({ where: { id: userId['id'] } });
+  }
+
+  async createUser({ createUserInput }: ISignUpsServiceCreate): Promise<User> {
     const {
       email,
       password,

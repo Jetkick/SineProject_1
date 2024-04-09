@@ -1,5 +1,5 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { SignUpService } from '../signUp/signUp.service';
+import { SignUpsService } from '../signUp/signUps.service';
 import * as bcrypt from 'bcrypt';
 import {
   IUsersServiceGetAccessToken,
@@ -12,8 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersService: SignUpService, //
-
+    private readonly usersService: SignUpsService, //
     private readonly jwtService: JwtService,
   ) {}
 
@@ -39,12 +38,8 @@ export class UsersService {
     return this.getAccessToken({ user });
   }
 
-  // 이거 방식이 조금 이상함??
-  async setRefreshToken({
-    user,
-    res,
-    context,
-  }: IUsersServiceSetRefreshToken): Promise<void> {
+  // res, context를 받을 때 받는 방법을 달리 생각해 봐야한다.
+  setRefreshToken({ user, res, context }: IUsersServiceSetRefreshToken): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id }, //
       { secret: 'userRefreshPassword', expiresIn: '2w' },
