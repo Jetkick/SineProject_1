@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SignUpResolver } from './signUp.resolver';
-import { SignUpService } from './signUp.service';
+import { SignUpsResolver } from './signUps.resolver';
+import { SignUpsService } from './signUps.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/signUp.entity';
 
@@ -11,11 +11,11 @@ import { User } from './entities/signUp.entity';
     ]),
   ],
   providers: [
-    SignUpResolver, //
-    SignUpService,
+    SignUpsResolver, //
+    SignUpsService,
   ],
   exports: [
-    SignUpService, //
+    SignUpsService, //
   ],
 })
-export class SignUpModule {}
+export class SignUpsModule {}
