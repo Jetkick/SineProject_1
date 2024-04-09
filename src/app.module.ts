@@ -8,11 +8,13 @@ import { UsersModule } from './apis/users/users.module';
 import { SupportsModule } from './apis/support/supports.module';
 import { UsersInquiriesModule } from './apis/usersInquiry/usersInquiry.module';
 import { NotifiesModule } from './apis/notifies/notifies.module';
+import { ShippingInstructionModule } from './apis/shippingInstruction/shippingInstruction.module';
 
 @Module({
   imports: [
-    NotifiesModule,
-    SignUpsModule, //
+    NotifiesModule, //
+    ShippingInstructionModule,
+    SignUpsModule,
     SupportsModule,
     UsersModule,
     UsersInquiriesModule,

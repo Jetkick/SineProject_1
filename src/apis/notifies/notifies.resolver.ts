@@ -16,7 +16,9 @@ export class NotifiesResolver {
   }
 
   @Query(() => Notify)
-  fetchNotify(@Args('notifyId') notifyId: string): Promise<Notify> {
+  fetchNotify(
+    @Args('notifyId') notifyId: string, //
+  ): Promise<Notify> {
     return this.notifiesService.fetchNotify({ notifyId });
   }
 
