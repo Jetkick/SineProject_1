@@ -8,6 +8,9 @@ export class CreateNotifyInput {
   @Field(() => String)
   notifyArticleImage: string;
 
+  @Field(() => String)
+  titleCover: string;
+
   @Field(() => String, { nullable: true })
   text: string;
 

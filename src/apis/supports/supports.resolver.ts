@@ -36,12 +36,13 @@ export class SupportsResolver {
   }
 
   @Query(() => [Support])
-  fetchSupports(): Promise<Support[]> {
-    return this.supportsService.findSupportAll();
-  }
-
-  @Query(() => String)
-  sayHello(): string {
-    return 'Hello World!';
+  fetchSupports(
+    @Args('category') category: string,
+    @Args({ name: 'subCategory', nullable: true }) subCategory: string,
+  ): Promise<Support[]> {
+    return this.supportsService.fetchSupports({
+      category,
+      subCategory,
+    });
   }
 }

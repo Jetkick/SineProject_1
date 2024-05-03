@@ -17,7 +17,7 @@ export class NotifiesService {
   ) {}
 
   fetchNotifies(): Promise<Notify[]> {
-    return this.notifiesRepository.find({});
+    return this.notifiesRepository.find();
   }
 
   async fetchNotify({ notifyId }: INotifiesServiceFetch): Promise<Notify> {
@@ -27,9 +27,9 @@ export class NotifiesService {
   }
 
   createNotify({ createNotifyInput }: INotifiesServiceCreate): Promise<Notify> {
-    return this.notifiesRepository.save({
-      ...createNotifyInput,
-    });
+    const result = this.notifiesRepository.create(createNotifyInput);
+
+    return this.notifiesRepository.save(result);
   }
 
   async updateNotify({
@@ -43,10 +43,9 @@ export class NotifiesService {
     if (!notify)
       throw new UnprocessableEntityException('존재하지 않는 ID 입니다.');
 
-    return this.notifiesRepository.save({
-      ...notify,
-      ...updateNotifyInput,
-    });
+    const result = this.notifiesRepository.merge(notify, updateNotifyInput);
+
+    return this.notifiesRepository.save(result);
   }
 
   async deleteNotify({ notifyId }: INotifiesServiceDelete): Promise<boolean> {

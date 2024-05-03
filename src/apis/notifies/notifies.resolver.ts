@@ -10,18 +10,6 @@ export class NotifiesResolver {
     private readonly notifiesService: NotifiesService, //
   ) {}
 
-  @Query(() => [Notify])
-  fetchNotifies(): Promise<Notify[]> {
-    return this.notifiesService.fetchNotifies();
-  }
-
-  @Query(() => Notify)
-  fetchNotify(
-    @Args('notifyId') notifyId: string, //
-  ): Promise<Notify> {
-    return this.notifiesService.fetchNotify({ notifyId });
-  }
-
   @Mutation(() => Notify)
   createNotify(
     @Args('createNotifyInput') createNotifyInput: CreateNotifyInput,
@@ -42,5 +30,17 @@ export class NotifiesResolver {
     @Args('notifyId') notifyId: string, //
   ): Promise<boolean> {
     return this.notifiesService.deleteNotify({ notifyId });
+  }
+
+  @Query(() => [Notify])
+  fetchNotifies(): Promise<Notify[]> {
+    return this.notifiesService.fetchNotifies();
+  }
+
+  @Query(() => Notify)
+  fetchNotify(
+    @Args('notifyId') notifyId: string, //
+  ): Promise<Notify> {
+    return this.notifiesService.fetchNotify({ notifyId });
   }
 }

@@ -6,7 +6,7 @@ export class CreateSupportInput {
   category: string;
 
   @Field(() => String, { nullable: true })
-  secondCategory?: string;
+  subCategory?: string;
 
   @Field(() => String)
   title: string;

@@ -17,5 +17,8 @@ import { JwtRefreshStrategy } from '../auth/strategies/jwt-refresh.strategy';
     UsersResolver, //
     UsersService,
   ],
+  exports: [
+    UsersService, //
+  ],
 })
 export class UsersModule {}

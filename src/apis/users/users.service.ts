@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import {
   IUsersServiceGetAccessToken,
   IUsersServiceLogin,
+  IUsersServiceLoginOAuth,
   IUsersServiceRefreshToken,
   IUsersServiceSetRefreshToken,
 } from './interfaces/users-service.interface';
@@ -13,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 export class UsersService {
   constructor(
     private readonly usersService: SignUpsService, //
+
     private readonly jwtService: JwtService,
   ) {}
 
@@ -29,33 +31,36 @@ export class UsersService {
 
     if (!isAuth) throw new UnprocessableEntityException('암호가 틀렸습니다');
 
-    this.setRefreshToken({ user, context });
+    this.setRefreshToken({ user, res: context.res });
 
     return this.getAccessToken({ user });
+  }
+
+  async loginOAuth({ req, res }: IUsersServiceLoginOAuth) {
+    let user = await this.usersService.findOneByEmail({
+      email: req.user.email,
+    });
+
+    if (!user)
+      user = await this.usersService.createUser({ createUserInput: req.user });
+
+    this.setRefreshToken({ user, res });
+
+    res.redirect('http://127.0.0.1:5501/frontend/social-login-test.html');
   }
 
   restoreAccessToken({ user }: IUsersServiceRefreshToken): string {
     return this.getAccessToken({ user });
   }
 
-  // res, context를 받을 때 받는 방법을 달리 생각해 봐야한다.
-  setRefreshToken({ user, res, context }: IUsersServiceSetRefreshToken): void {
+  setRefreshToken({ user, res }: IUsersServiceSetRefreshToken): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id }, //
       { secret: 'userRefreshPassword', expiresIn: '2w' },
     );
+    console.log(refreshToken);
 
-    context.res.setHeader(
-      'set-Cookie',
-      `refreshToken=${refreshToken}; path=/;`,
-    );
-
-    if (res) {
-      res.setHeader(
-        'set-Cookie', //
-        `refreshToken=${refreshToken}; path=/;`,
-      );
-    }
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
   }
 
   getAccessToken({ user }: IUsersServiceGetAccessToken): string {

@@ -1,11 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/apis/signUp/entities/signUp.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,7 +21,7 @@ export class UsersInquiry {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   @Field(() => String, { nullable: true })
-  secondCategory?: string;
+  subCategory?: string;
 
   @Column({ type: 'varchar', length: 200 })
   @Field(() => String)
@@ -33,9 +31,8 @@ export class UsersInquiry {
   @Field(() => String)
   text: string;
 
-  @ManyToOne(() => User)
-  @Field(() => User)
-  userId: User;
+  @Column()
+  userId: string;
 
   @CreateDateColumn()
   @Field(() => Date)

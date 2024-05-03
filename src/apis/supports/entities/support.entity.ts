@@ -21,7 +21,7 @@ export class Support {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   @Field(() => String, { nullable: true })
-  secondCategory?: string;
+  subCategory?: string;
 
   @Column({ type: 'varchar', length: 200 })
   @Field(() => String)

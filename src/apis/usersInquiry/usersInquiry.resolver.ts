@@ -15,9 +15,9 @@ export class UsersInquiriesResolver {
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => UsersInquiry)
   createUsersInquiry(
-    @Context() context: IContext, //
     @Args('createUsersInquiryInput')
     createUsersInquiryInput: CreateUsersInquiryInput,
+    @Context() context: IContext,
   ): Promise<UsersInquiry> {
     const user = context.req.user;
     return this.usersInquiriesService.createUsersInquiry({
@@ -28,11 +28,24 @@ export class UsersInquiriesResolver {
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => [UsersInquiry])
-  fetchUsersInquiry(
+  fetchUsersInquiries(
     @Context() context: IContext, //
   ): Promise<UsersInquiry[]> {
     const user = context.req.user;
+    return this.usersInquiriesService.fetchUsersInquiries({
+      user,
+    });
+  }
+
+  @UseGuards(GqlAuthGuard('access'))
+  @Query(() => UsersInquiry)
+  fetchUsersInquiry(
+    @Args('usersInquiryId') usersInquiryId: string,
+    @Context() context: IContext,
+  ): Promise<UsersInquiry> {
+    const user = context.req.user;
     return this.usersInquiriesService.fetchUsersInquiry({
+      usersInquiryId,
       user,
     });
   }

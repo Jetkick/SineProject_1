@@ -32,6 +32,9 @@ export class User {
   @Field(() => String)
   phoneNumber: string;
 
+  @Column({ type: 'varchar', length: 50 })
+  certifieNumber: string;
+
   @Column({ type: 'boolean', default: false })
   termsConditions: boolean;
 

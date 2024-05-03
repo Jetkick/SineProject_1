@@ -1,4 +1,5 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { IOAuthUser } from 'src/apis/auth/interfaces/auth-service.interface';
 import { User } from 'src/apis/signUp/entities/signUp.entity';
 import { IAuthUser, IContext } from 'src/common/interfaces/context';
 
@@ -8,14 +9,18 @@ export interface IUsersServiceLogin {
   context: IContext;
 }
 
+export interface IUsersServiceLoginOAuth {
+  req: Request & IOAuthUser;
+  res: Response;
+}
+
 export interface IUsersServiceRefreshToken {
   user: IAuthUser['user'];
 }
 
 export interface IUsersServiceSetRefreshToken {
   user: User;
-  context?: IContext;
-  res?: Response;
+  res: Response;
 }
 
 export interface IUsersServiceGetAccessToken {

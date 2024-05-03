@@ -23,6 +23,10 @@ export class Notify {
   @Field(() => String)
   notifyArticleImage: string;
 
+  @Column({ type: 'varchar', length: 100 })
+  @Field(() => String)
+  titleCover: string;
+
   @Column({ type: 'varchar', length: 1000, nullable: true })
   @Field(() => String, { nullable: true })
   text: string;

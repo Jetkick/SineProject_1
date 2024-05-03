@@ -6,5 +6,5 @@ export class CreateShippingInstructionInput {
   shippingArea: string;
 
   @Field(() => String)
-  delivery: string;
+  deliveryType: string;
 }

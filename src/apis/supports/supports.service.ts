@@ -8,6 +8,7 @@ import {
   ISupportsServiceCreate,
   ISupportsServiceDelete,
   ISupportsServiceFindOneByTitle,
+  ISupportsServiceFindSupport,
   ISupportsServiceUpdate,
 } from './interfaces/supports-service.interface';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,14 +25,21 @@ export class SupportsService {
     return this.supportsRepository.findOne({ where: { title: title } });
   }
 
-  findSupportAll(): Promise<Support[]> {
-    return this.supportsRepository.find();
+  async fetchSupports({
+    category,
+    subCategory,
+  }: ISupportsServiceFindSupport): Promise<Support[]> {
+    const result = await this.supportsRepository.find({
+      where: { category: category, subCategory: subCategory },
+    });
+
+    return result;
   }
 
   async createSupport({
     createSupportInput,
   }: ISupportsServiceCreate): Promise<Support> {
-    const { category, secondCategory, title, text } = createSupportInput;
+    const { category, subCategory, title, text } = createSupportInput;
 
     const isTitle = await this.findOneByTitle({ title });
 
@@ -39,7 +47,7 @@ export class SupportsService {
 
     return this.supportsRepository.save({
       category,
-      secondCategory,
+      subCategory,
       title,
       text,
     });

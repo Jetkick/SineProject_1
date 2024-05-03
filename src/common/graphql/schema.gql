@@ -20,7 +20,7 @@ scalar DateTime
 type Support {
   id: String!
   category: String!
-  secondCategory: String
+  subCategory: String
   title: String!
   text: String!
   createdAt: DateTime!
@@ -31,10 +31,9 @@ type Support {
 type UsersInquiry {
   id: String!
   category: String!
-  secondCategory: String
+  subCategory: String
   title: String!
   text: String!
-  userId: User!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
@@ -44,6 +43,7 @@ type Notify {
   id: String!
   title: String!
   notifyArticleImage: String!
+  titleCover: String!
   text: String
   textImage: String
   createdAt: DateTime!
@@ -51,39 +51,100 @@ type Notify {
   deletedAt: DateTime!
 }
 
+type shippyInstruction {
+  id: String!
+  shippingArea: String!
+  deliveryType: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type Product {
+  id: String!
+  product: String!
+  productCategory: String!
+  productSubCategory: String
+  productImage: String!
+  productTag: String
+  productWeight: String!
+  productPrice: Int!
+  productDiscountPersent: String
+  productDetailOptions: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type Cart {
+  id: String!
+  productDetailQuantity: Int!
+  productId: Product!
+  userId: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type Payment {
+  id: String!
+  userId: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type UserAddress {
+  id: String!
+  recipient: String!
+  phoneNumber: String!
+  postalCode: String!
+  address: String!
+  detailAddress: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+}
+
 type Query {
+  sayHello: String!
+  fetchUser(userPhoneNumber: String!): String!
+  fetchProduct(productId: String!): Product!
   fetchNotifies: [Notify!]!
   fetchNotify(notifyId: String!): Notify!
-  sayHello: String!
-  fetchSupports: [Support!]!
-  fetchUsersInquiry: [UsersInquiry!]!
+  fetchProducts(productCategory: String!, productSubCategory: String): [Product!]!
+  fetchShippingInstruction(shippyInstructionId: String!): shippyInstruction!
+  fetchSupports(category: String!, subCategory: String): [Support!]!
+  fetchsUsersAddress: [UserAddress!]!
+  fetchUsersInquiries: [UsersInquiry!]!
+  fetchUsersInquiry(usersInquiryId: String!): UsersInquiry!
 }
 
 type Mutation {
+  login(email: String!, password: String!): String!
+  restoreAccessToken: String!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
+  deleteUser(userId: String!): User!
+  createCart(productId: String!, createCartInput: CreateCartInput!): Cart!
+  updateCart(cartId: String!, updateCartInput: UpdateCartInput!): Cart!
+  deleteCart(cartId: String!): Boolean!
   createNotify(createNotifyInput: CreateNotifyInput!): Notify!
   updateNotify(notifyId: String!, updateNotifyInput: UpdateNotifyInput!): Notify!
   deleteNotify(notifyId: String!): Boolean!
-  createUser(createUserInput: CreateUserInput!): User!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
+  deleteProduct(productId: String!): Boolean!
+  createPayment: Payment!
+  createShippingInstruction(createShippingInstructionInput: CreateShippingInstructionInput!): shippyInstruction!
+  updateShippingInstruction(shippyInstructionId: String!, updateShippingInstructionInput: UpdateShippingInstructionInput!): shippyInstruction!
   createSupport(createSupportInput: CreateSupportInput!): Support!
   updateSupport(supportId: String!, updateSupportInput: UpdateSupportInput!): Support!
   deleteSupport(supportId: String!): Boolean!
-  login(email: String!, password: String!): String!
-  restoreAccessToken: String!
+  createUsersAddress(createUsersAddressInput: CreateUsersAddressInput!): UserAddress!
+  updateUsersAddress(userAddressId: String!, updateUsersAddressInput: UpdateUsersAddressInput!): UserAddress!
+  deleteUsersAddress(userAddressId: String!): Boolean!
   createUsersInquiry(createUsersInquiryInput: CreateUsersInquiryInput!): UsersInquiry!
-}
-
-input CreateNotifyInput {
-  title: String!
-  notifyArticleImage: String!
-  text: String
-  textImage: String
-}
-
-input UpdateNotifyInput {
-  title: String
-  notifyArticleImage: String
-  text: String
-  textImage: String
 }
 
 input CreateUserInput {
@@ -91,27 +152,112 @@ input CreateUserInput {
   password: String!
   name: String!
   phoneNumber: String!
+  certifieNumber: String!
   termsConditions: Boolean!
   personalInformation: Boolean!
 }
 
+input UpdateUserInput {
+  email: String
+  password: String
+  name: String
+  phoneNumber: String
+  certifieNumber: String
+  termsConditions: Boolean
+  personalInformation: Boolean
+}
+
+input CreateCartInput {
+  productDetailQuantity: Int!
+}
+
+input UpdateCartInput {
+  productDetailQuantity: Int
+}
+
+input CreateNotifyInput {
+  title: String!
+  notifyArticleImage: String!
+  titleCover: String!
+  text: String
+  textImage: String
+}
+
+input UpdateNotifyInput {
+  title: String
+  notifyArticleImage: String
+  titleCover: String
+  text: String
+  textImage: String
+}
+
+input CreateProductInput {
+  product: String!
+  productCategory: String!
+  productSubCategory: String
+  productImage: String!
+  productTag: String
+  productWeight: String!
+  productPrice: Float!
+  productDiscountPersent: String
+  productDetailOptions: [String!]!
+}
+
+input UpdateProductInput {
+  product: String
+  productCategory: String
+  productSubCategory: String
+  productImage: String
+  productTag: String
+  productWeight: String
+  productPrice: Float
+  productDiscountPersent: String
+  productDetailOptions: [String!]
+}
+
+input CreateShippingInstructionInput {
+  shippingArea: String!
+  deliveryType: String!
+}
+
+input UpdateShippingInstructionInput {
+  shippingArea: String
+  deliveryType: String
+}
+
 input CreateSupportInput {
   category: String!
-  secondCategory: String
+  subCategory: String
   title: String!
   text: String!
 }
 
 input UpdateSupportInput {
   category: String
-  secondCategory: String
+  subCategory: String
   title: String
   text: String
 }
 
+input CreateUsersAddressInput {
+  recipient: String!
+  phoneNumber: String!
+  postalCode: String!
+  address: String!
+  detailAddress: String
+}
+
+input UpdateUsersAddressInput {
+  recipient: String
+  phoneNumber: String
+  postalCode: String
+  address: String
+  detailAddress: String
+}
+
 input CreateUsersInquiryInput {
   category: String!
-  secondCategory: String
+  subCategory: String
   title: String!
   text: String!
 }

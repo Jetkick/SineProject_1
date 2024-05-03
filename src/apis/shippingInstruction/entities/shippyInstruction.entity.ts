@@ -21,7 +21,7 @@ export class shippyInstruction {
 
   @Column({ type: 'varchar', length: 100 })
   @Field(() => String)
-  delivery: string;
+  deliveryType: string;
 
   @CreateDateColumn()
   @Field(() => Date)

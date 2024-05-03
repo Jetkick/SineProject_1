@@ -5,18 +5,28 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './apis/users/users.module';
-import { SupportsModule } from './apis/support/supports.module';
+import { SupportsModule } from './apis/supports/supports.module';
 import { UsersInquiriesModule } from './apis/usersInquiry/usersInquiry.module';
 import { NotifiesModule } from './apis/notifies/notifies.module';
 import { ShippingInstructionModule } from './apis/shippingInstruction/shippingInstruction.module';
+import { AuthModule } from './apis/auth/auth.module';
+import { ProductsModule } from './apis/products/products.module';
+import { CartsModule } from './apis/carts/carts.module';
+import { PaymentsMoudle } from './apis/payments/payments.module';
+import { UsersAddressModule } from './apis/usersAddress/usersAddress.module';
 
 @Module({
   imports: [
-    NotifiesModule, //
+    AuthModule, //
+    CartsModule,
+    NotifiesModule,
+    ProductsModule,
+    PaymentsMoudle,
     ShippingInstructionModule,
     SignUpsModule,
     SupportsModule,
     UsersModule,
+    UsersAddressModule,
     UsersInquiriesModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
