@@ -7,6 +7,7 @@ type User {
   email: String!
   name: String!
   phoneNumber: String!
+  point: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
@@ -34,6 +35,7 @@ type UsersInquiry {
   subCategory: String
   title: String!
   text: String!
+  userId: User!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
@@ -88,10 +90,27 @@ type Cart {
 
 type Payment {
   id: String!
+  deliveryDate: DateTime!
+  deliveryType: String!
+  deliveryAccessType: String!
+  deliveryAccessNote: String!
+  deliveryNotification: String!
+  impUid: String!
+  kind: String!
+  paymentMethod: String!
+  paymentType: String!
+  price: Int!
+  paymentConditions: Boolean!
+  status: PAYMENT_STATUS_ENUM!
   userId: User!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
+}
+
+enum PAYMENT_STATUS_ENUM {
+  PAYMENT
+  CANCEL
 }
 
 type UserAddress {
@@ -101,6 +120,7 @@ type UserAddress {
   postalCode: String!
   address: String!
   detailAddress: String
+  userId: User!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
@@ -135,7 +155,8 @@ type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
-  createPayment: Payment!
+  createPayment(impUid: String!, point: Int, createPaymentInput: CreatePaymentInput!): Payment!
+  cancelPayment(impUid: String!, createPaymentInput: CreatePaymentInput!): Payment!
   createShippingInstruction(createShippingInstructionInput: CreateShippingInstructionInput!): shippyInstruction!
   updateShippingInstruction(shippyInstructionId: String!, updateShippingInstructionInput: UpdateShippingInstructionInput!): shippyInstruction!
   createSupport(createSupportInput: CreateSupportInput!): Support!
@@ -213,6 +234,19 @@ input UpdateProductInput {
   productPrice: Float
   productDiscountPersent: String
   productDetailOptions: [String!]
+}
+
+input CreatePaymentInput {
+  deliveryDate: DateTime!
+  deliveryType: String!
+  deliveryAccessType: String!
+  deliveryAccessNote: String!
+  deliveryNotification: String!
+  kind: String!
+  paymentMethod: String!
+  paymentType: String!
+  price: Int!
+  paymentConditions: Boolean!
 }
 
 input CreateShippingInstructionInput {

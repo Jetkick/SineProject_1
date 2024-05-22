@@ -23,7 +23,6 @@ export class SignUpsService {
     private readonly usersRepository: Repository<User>, //
   ) {}
 
-  // 확장성 있게 데이터를 찾아오는 방법. 이메일에 국한된 것이 아닌 다른 것들도 찾을 수 있는 방법은?
   async findOneByEmail({
     email,
   }: ISignUpsServiceFindOneByEmail): Promise<User> {

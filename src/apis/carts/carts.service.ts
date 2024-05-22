@@ -6,7 +6,6 @@ import {
   ICartsServiceCreate,
   ICartsServiceDelete,
   ICartsServiceFindOneByCartId,
-  ICartsServiceFindOneByCartProductId,
   ICartsServiceUpdate,
 } from './interfaces/carts-service.interface';
 import { SignUpsService } from '../signUp/signUps.service';
@@ -29,16 +28,6 @@ export class CartsService {
     return result;
   }
 
-  async findOneByCartProductId({
-    userId,
-    productId,
-  }: ICartsServiceFindOneByCartProductId): Promise<Cart> {
-    const result = await this.cartsRepository.findOne({
-      where: { userId: userId[''], productId: productId[''] },
-    });
-    return result;
-  }
-
   async createCart({ productId, createCartInput, user }: ICartsServiceCreate) {
     const userId = await this.signUpsService.findOneByUserId({
       userId: user,
@@ -46,25 +35,26 @@ export class CartsService {
 
     if (!userId) throw new UnprocessableEntityException('유저가 없습니다!');
 
+    const userIdId = userId.id;
+
     const product = await this.productsSerivce.findOneByProductId({
       productId,
     });
 
     if (!product) throw new UnprocessableEntityException('제품이 없습니다!');
 
-    // const a = await this.cartsRepository.findOne({
-    //   where: { product
-    // });
+    const productValidate = await this.cartsRepository
+      .createQueryBuilder('cart')
+      .select('product.id')
+      .innerJoin('cart.productId', 'product')
+      .where('cart.userId = :userIdId', { userIdId })
+      .getRawOne();
 
-    const productValidate = await this.findOneByCartProductId({
-      userId: userId.id,
-      productId: product.id,
-    });
-
-    if (productValidate)
+    if (productValidate) {
       throw new UnprocessableEntityException(
-        '이미 장바구니에 제품이 있습니다!',
+        '장바구니에 이미 제품이 있습니다.',
       );
+    }
 
     const result = this.cartsRepository.create({
       ...createCartInput,

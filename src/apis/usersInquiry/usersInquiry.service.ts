@@ -23,12 +23,16 @@ export class UsersInquiriesService {
   }: IUsersInquiriesServiceFetch): Promise<UsersInquiry[]> {
     const user = await this.signUpsService.findOneByUserId({ userId });
 
+    const userIdId = user.id;
+
     if (!user)
       throw new UnprocessableEntityException('존재하지 않는 유저 입니다!');
 
-    const result = await this.usersInpuiriesRepository.find({
-      where: { userId: user.id },
-    });
+    const result = await this.usersInpuiriesRepository
+      .createQueryBuilder('users_inquiry')
+      .select('*')
+      .where('users_inquiry.userIdId = :userIdId', { userIdId })
+      .getRawMany();
 
     return result;
   }
@@ -57,7 +61,7 @@ export class UsersInquiriesService {
       throw new UnprocessableEntityException('존재하지 않는 유저 입니다!');
 
     return this.usersInpuiriesRepository.save({
-      userId: user.id,
+      userId: user,
       ...createUsersInquiryInput,
     });
   }

@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -31,6 +31,10 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   @Field(() => String)
   phoneNumber: string;
+
+  @Column({ default: 0 })
+  @Field(() => Int)
+  point: number;
 
   @Column({ type: 'varchar', length: 50 })
   certifieNumber: string;

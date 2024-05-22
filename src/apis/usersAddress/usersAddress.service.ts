@@ -9,6 +9,7 @@ import {
   IUsersAddressServiceFetchsUsersAddress,
   IUsersAddressServiceUpdate,
 } from './interfaces/usersAddress-service.interface';
+import { error } from 'console';
 
 @Injectable()
 export class UsersAddressService {
@@ -30,7 +31,7 @@ export class UsersAddressService {
       throw new UnprocessableEntityException('존재하지 않는 유저 입니다!');
 
     const result = await this.usersAddressRepository.find({
-      where: { userId: userId.id },
+      where: { userId: userId },
     });
 
     return result;
@@ -44,19 +45,35 @@ export class UsersAddressService {
       userId: user,
     });
 
+    const userIdId = userId.id;
+
     if (!userId)
       throw new UnprocessableEntityException('로그인을 다시 해주세요');
 
-    const userAddressValidate = await this.usersAddressRepository.findOne({
-      where: { userId: userId.id, address: createUsersAddressInput.address },
-    });
+    const userAddressValidate = await this.usersAddressRepository
+      .createQueryBuilder('user_address')
+      .select('user_address.address')
+      .addSelect('user_address.detailAddress')
+      .innerJoin('user_address.userId', 'user')
+      .where('user_address.userIdId = :userIdId', { userIdId })
+      .getRawMany();
 
-    if (userAddressValidate)
-      throw new UnprocessableEntityException('이미 등록되어 있는 주소입니다!');
+    userAddressValidate.forEach((el) => {
+      if (createUsersAddressInput.address === el.user_address_address) {
+        if (
+          createUsersAddressInput.detailAddress ===
+          el.user_address_detailAddress
+        ) {
+          throw new UnprocessableEntityException(
+            '이미 등록되어 있는 주소입니다!',
+          );
+        }
+      }
+    });
 
     const result = this.usersAddressRepository.create({
       ...createUsersAddressInput,
-      userId: userId.id,
+      userId: userId,
     });
 
     return this.usersAddressRepository.save(result);
